@@ -7,7 +7,7 @@ class AutoFormFiller {
     this.processedFields = new Set();
     this.timeoutId = null;
     
-    // Base de dados expandida de personagens
+    // Base de dados de personagens
     this.animationCharacters = [
       'Mickey Mouse', 'Minnie Mouse', 'Donald Duck', 'Goofy', 'Pluto',
       'Bugs Bunny', 'Daffy Duck', 'Porky Pig', 'Tweety', 'Sylvester',
@@ -21,19 +21,7 @@ class AutoFormFiller {
       'Woody', 'Buzz Lightyear', 'Simba', 'Mufasa', 'Elsa', 'Anna',
       'Olaf', 'Moana', 'Maui', 'Belle', 'Beast', 'Aladdin', 'Jasmine',
       'Ariel', 'Sebastian', 'Flounder', 'Nemo', 'Dory', 'Marlin',
-      'Shrek', 'Fiona', 'Donkey', 'Puss in Boots', 'Po', 'Tigress',
-      'Viper', 'Mantis', 'Crane', 'Monkey', 'Master Shifu', 'Oogway'
-    ];
-    
-    this.companies = [
-      'SwordHealth', 'TechCorp', 'InnovateNow', 'DataSystems', 'CloudWorks',
-      'NextGen Solutions', 'Digital Dynamics', 'Future Labs', 'SmartTech'
-    ];
-    
-    this.jobTitles = [
-      'Software Engineer', 'Product Manager', 'UX Designer', 'Data Scientist',
-      'Marketing Specialist', 'Sales Representative', 'HR Manager', 'Consultant',
-      'Project Manager', 'Business Analyst', 'Developer', 'Designer'
+      'Shrek', 'Fiona', 'Donkey', 'Puss in Boots', 'Po', 'Tigress'
     ];
     
     this.init();
@@ -59,14 +47,6 @@ class AutoFormFiller {
     return this.animationCharacters[Math.floor(Math.random() * this.animationCharacters.length)];
   }
   
-  getRandomCompany() {
-    return this.companies[Math.floor(Math.random() * this.companies.length)];
-  }
-  
-  getRandomJobTitle() {
-    return this.jobTitles[Math.floor(Math.random() * this.jobTitles.length)];
-  }
-  
   generateEmail(name) {
     const cleanName = name.toLowerCase()
       .replace(/\s+/g, '.')
@@ -76,12 +56,7 @@ class AutoFormFiller {
   }
   
   generatePhoneNumber() {
-    const formats = [
-      `+351 9${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 10000000).toString().padStart(7, '0')}`,
-      `9${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 10000000).toString().padStart(7, '0')}`,
-      `+1 (${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`
-    ];
-    return formats[Math.floor(Math.random() * formats.length)];
+    return `+351 9${Math.floor(Math.random() * 9)}${Math.floor(Math.random() * 10000000).toString().padStart(7, '0')}`;
   }
   
   generateDate() {
@@ -104,10 +79,6 @@ class AutoFormFiller {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   }
   
-  generateDateTime() {
-    return `${this.generateDateISO()}T${this.generateTime()}`;
-  }
-  
   generateNumber(min = 1, max = 100) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -116,205 +87,73 @@ class AutoFormFiller {
     return Math.floor(Math.random() * 60) + 18;
   }
   
-  generateSalary() {
-    return Math.floor(Math.random() * 80000) + 20000;
+  generateAddress() {
+    const streets = ['Rua da Liberdade', 'Av. da República', 'Rua Augusta', 'Rua do Carmo', 'Av. Almirante Reis'];
+    const street = streets[Math.floor(Math.random() * streets.length)];
+    const number = Math.floor(Math.random() * 999) + 1;
+    return `${street}, ${number}`;
   }
   
-  generateURL() {
-    const character = this.getRandomCharacter().toLowerCase().replace(/\s+/g, '');
-    return `https://www.${character}.com`;
+  generateCity() {
+    const cities = ['Lisboa', 'Porto', 'Braga', 'Coimbra', 'Faro', 'Aveiro', 'Viseu', 'Évora'];
+    return cities[Math.floor(Math.random() * cities.length)];
   }
   
-  generatePassword() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%';
-    let password = '';
-    for (let i = 0; i < 12; i++) {
-      password += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return password;
-  }
-  
-  generateColor() {
-    const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33F5', '#F5FF33', '#33FFF5'];
-    return colors[Math.floor(Math.random() * colors.length)];
+  generatePostalCode() {
+    return `${Math.floor(Math.random() * 9999) + 1000}-${Math.floor(Math.random() * 999).toString().padStart(3, '0')}`;
   }
   
   detectFieldType(element) {
-    const id = element.id?.toLowerCase() || '';
-    const name = element.name?.toLowerCase() || '';
-    const placeholder = element.placeholder?.toLowerCase() || '';
-    const label = this.getFieldLabel(element)?.toLowerCase() || '';
-    const type = element.type?.toLowerCase() || 'text';
-    const className = element.className?.toLowerCase() || '';
-    const title = element.title?.toLowerCase() || '';
+    const id = (element.id || '').toLowerCase();
+    const name = (element.name || '').toLowerCase();
+    const placeholder = (element.placeholder || '').toLowerCase();
+    const type = (element.type || 'text').toLowerCase();
+    const className = (element.className || '').toLowerCase();
     
-    const allText = `${id} ${name} ${placeholder} ${label} ${className} ${title}`.toLowerCase();
+    const allText = `${id} ${name} ${placeholder} ${className}`.toLowerCase();
     
-    console.log('Detectando campo:', {
-      element,
-      type,
-      allText: allText.substring(0, 100),
-      tagName: element.tagName
-    });
-    
-    // Tipos específicos por input type
-    switch (type) {
-      case 'email': return 'email';
-      case 'tel': return 'phone';
-      case 'date': return 'date';
-      case 'time': return 'time';
-      case 'datetime-local': return 'datetime';
-      case 'number': return 'number';
-      case 'range': return 'range';
-      case 'url': return 'url';
-      case 'password': return 'password';
-      case 'color': return 'color';
-      case 'search': return 'search';
-      case 'month': return 'month';
-      case 'week': return 'week';
-    }
-    
-    // Email
-    if (allText.includes('email') || allText.includes('e-mail') || allText.includes('mail')) {
+    // Tipos específicos primeiro
+    if (type === 'email' || allText.includes('email') || allText.includes('e-mail')) {
       return 'email';
     }
     
-    // Nome
-    if (allText.includes('name') || allText.includes('nome') || 
-        allText.includes('first') || allText.includes('last') || 
-        allText.includes('primeiro') || allText.includes('último') ||
-        allText.includes('apelido') || allText.includes('surname') ||
-        allText.includes('fullname') || allText.includes('full_name') ||
-        allText.includes('firstname') || allText.includes('lastname')) {
-      return 'name';
-    }
-    
-    // Telefone
-    if (allText.includes('phone') || allText.includes('tel') || 
-        allText.includes('telefone') || allText.includes('móvel') || 
-        allText.includes('celular') || allText.includes('contact') ||
-        allText.includes('mobile') || allText.includes('number')) {
+    if (type === 'tel' || allText.includes('phone') || allText.includes('tel') || allText.includes('telefone')) {
       return 'phone';
     }
     
-    // Data
-    if (allText.includes('date') || allText.includes('birth') || 
-        allText.includes('data') || allText.includes('nascimento') || 
-        allText.includes('aniversário') || allText.includes('birthday') ||
-        allText.includes('day') || allText.includes('month') || allText.includes('year')) {
+    if (type === 'date' || allText.includes('date') || allText.includes('birth') || allText.includes('data')) {
       return 'date';
     }
     
-    // Endereço
-    if (allText.includes('address') || allText.includes('endereço') || 
-        allText.includes('morada') || allText.includes('rua') || 
-        allText.includes('street') || allText.includes('avenue') ||
-        allText.includes('location') || allText.includes('local')) {
+    if (type === 'time') {
+      return 'time';
+    }
+    
+    if (type === 'number' || allText.includes('age') || allText.includes('idade')) {
+      return 'number';
+    }
+    
+    if (allText.includes('name') || allText.includes('nome') || allText.includes('first') || allText.includes('last')) {
+      return 'name';
+    }
+    
+    if (allText.includes('address') || allText.includes('endereço') || allText.includes('street') || allText.includes('rua')) {
       return 'address';
     }
     
-    // Cidade
-    if (allText.includes('city') || allText.includes('cidade') ||
-        allText.includes('town') || allText.includes('municipality')) {
+    if (allText.includes('city') || allText.includes('cidade')) {
       return 'city';
     }
     
-    // Código postal
-    if (allText.includes('postal') || allText.includes('zip') || 
-        allText.includes('código') || allText.includes('postcode')) {
+    if (allText.includes('postal') || allText.includes('zip') || allText.includes('código')) {
       return 'postal';
     }
     
-    // País
-    if (allText.includes('country') || allText.includes('país') ||
-        allText.includes('nation') || allText.includes('nationality')) {
+    if (allText.includes('country') || allText.includes('país')) {
       return 'country';
     }
     
-    // Empresa
-    if (allText.includes('company') || allText.includes('empresa') ||
-        allText.includes('organization') || allText.includes('employer') ||
-        allText.includes('business') || allText.includes('corp')) {
-      return 'company';
-    }
-    
-    // Trabalho/Profissão
-    if (allText.includes('job') || allText.includes('work') || 
-        allText.includes('profession') || allText.includes('occupation') ||
-        allText.includes('career') || allText.includes('position') ||
-        allText.includes('title') || allText.includes('role')) {
-      return 'job';
-    }
-    
-    // Idade
-    if (allText.includes('age') || allText.includes('idade') ||
-        allText.includes('years') || allText.includes('anos')) {
-      return 'age';
-    }
-    
-    // Salário
-    if (allText.includes('salary') || allText.includes('salário') ||
-        allText.includes('wage') || allText.includes('income') ||
-        allText.includes('pay') || allText.includes('earning')) {
-      return 'salary';
-    }
-    
-    // URL/Website
-    if (allText.includes('url') || allText.includes('website') ||
-        allText.includes('site') || allText.includes('link') ||
-        allText.includes('web') || allText.includes('homepage')) {
-      return 'url';
-    }
-    
-    // Comentários/Mensagem
-    if (allText.includes('comment') || allText.includes('message') ||
-        allText.includes('description') || allText.includes('note') ||
-        allText.includes('feedback') || allText.includes('review') ||
-        allText.includes('texto') || allText.includes('mensagem') ||
-        element.tagName === 'TEXTAREA') {
-      return 'message';
-    }
-    
     return 'text';
-  }
-  
-  getFieldLabel(element) {
-    // Procurar label associada
-    if (element.id) {
-      const label = document.querySelector(`label[for="${element.id}"]`);
-      if (label) return label.textContent.trim();
-    }
-    
-    // Procurar label pai
-    const parentLabel = element.closest('label');
-    if (parentLabel) return parentLabel.textContent.trim();
-    
-    // Procurar label anterior
-    let sibling = element.previousElementSibling;
-    while (sibling) {
-      if (sibling.tagName === 'LABEL') {
-        return sibling.textContent.trim();
-      }
-      if (sibling.textContent && sibling.textContent.trim() && 
-          sibling.textContent.trim().length < 50) {
-        return sibling.textContent.trim();
-      }
-      sibling = sibling.previousElementSibling;
-    }
-    
-    // Procurar texto próximo
-    const parent = element.parentElement;
-    if (parent) {
-      const textNodes = Array.from(parent.childNodes)
-        .filter(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim())
-        .map(node => node.textContent.trim());
-      
-      if (textNodes.length > 0) {
-        return textNodes[0];
-      }
-    }
-    
-    return '';
   }
   
   getValueForField(fieldType, element) {
@@ -323,343 +162,248 @@ class AutoFormFiller {
     switch (fieldType) {
       case 'email':
         return this.generateEmail(character);
-      
       case 'name':
         return character;
-      
       case 'phone':
         return this.generatePhoneNumber();
-      
       case 'date':
         return element.type === 'date' ? this.generateDateISO() : this.generateDate();
-      
       case 'time':
         return this.generateTime();
-      
-      case 'datetime':
-        return this.generateDateTime();
-      
-      case 'month':
-        const year = Math.floor(Math.random() * 30) + 1990;
-        const month = Math.floor(Math.random() * 12) + 1;
-        return `${year}-${month.toString().padStart(2, '0')}`;
-      
-      case 'week':
-        const weekYear = Math.floor(Math.random() * 30) + 1990;
-        const week = Math.floor(Math.random() * 52) + 1;
-        return `${weekYear}-W${week.toString().padStart(2, '0')}`;
-      
       case 'number':
-        if (element.min && element.max) {
-          return this.generateNumber(parseInt(element.min), parseInt(element.max));
+        if (element.getAttribute('max')) {
+          const max = parseInt(element.getAttribute('max'));
+          const min = parseInt(element.getAttribute('min')) || 1;
+          return this.generateNumber(min, max);
         }
-        return this.generateNumber();
-      
-      case 'range':
-        const min = parseInt(element.min) || 0;
-        const max = parseInt(element.max) || 100;
-        return this.generateNumber(min, max);
-      
+        return this.generateAge();
       case 'address':
         return this.generateAddress();
-      
       case 'city':
         return this.generateCity();
-      
       case 'postal':
         return this.generatePostalCode();
-      
       case 'country':
         return 'Portugal';
-      
-      case 'company':
-        return this.getRandomCompany();
-      
-      case 'job':
-        return this.getRandomJobTitle();
-      
-      case 'age':
-        return this.generateAge();
-      
-      case 'salary':
-        return this.generateSalary();
-      
-      case 'url':
-        return this.generateURL();
-      
-      case 'password':
-        return this.generatePassword();
-      
-      case 'color':
-        return this.generateColor();
-      
-      case 'search':
-        return character;
-      
-      case 'message':
-        return `Olá! Sou ${character} e estou muito interessado/a nesta oportunidade. Tenho experiência relevante e estou ansioso/a por contribuir para o vosso projeto.`;
-      
       default:
+        if (element.tagName === 'TEXTAREA') {
+          return `Olá! Sou ${character} e estou muito interessado/a nesta oportunidade.`;
+        }
         return character;
     }
   }
   
-  generateAddress() {
-    const streets = [
-      'Rua da Liberdade', 'Av. da República', 'Rua Augusta', 'Rua do Carmo', 
-      'Av. Almirante Reis', 'Rua de Santa Catarina', 'Av. dos Aliados',
-      'Rua das Flores', 'Praça do Comércio', 'Rua Garrett'
-    ];
-    const street = streets[Math.floor(Math.random() * streets.length)];
-    const number = Math.floor(Math.random() * 999) + 1;
-    return `${street}, ${number}`;
-  }
-  
-  generateCity() {
-    const cities = [
-      'Lisboa', 'Porto', 'Braga', 'Coimbra', 'Faro', 'Aveiro', 'Viseu', 
-      'Évora', 'Setúbal', 'Leiria', 'Vila Nova de Gaia', 'Amadora'
-    ];
-    return cities[Math.floor(Math.random() * cities.length)];
-  }
-  
-  generatePostalCode() {
-    return `${Math.floor(Math.random() * 9999) + 1000}-${Math.floor(Math.random() * 999).toString().padStart(3, '0')}`;
-  }
-  
   getFormFields() {
-    // Selecionar TODOS os tipos de input possíveis
-    const selectors = [
-      'input[type="text"]:not([readonly]):not([disabled])',
-      'input[type="email"]:not([readonly]):not([disabled])',
-      'input[type="tel"]:not([readonly]):not([disabled])',
-      'input[type="date"]:not([readonly]):not([disabled])',
-      'input[type="time"]:not([readonly]):not([disabled])',
-      'input[type="datetime-local"]:not([readonly]):not([disabled])',
-      'input[type="number"]:not([readonly]):not([disabled])',
-      'input[type="range"]:not([readonly]):not([disabled])',
-      'input[type="url"]:not([readonly]):not([disabled])',
-      'input[type="password"]:not([readonly]):not([disabled])',
-      'input[type="color"]:not([readonly]):not([disabled])',
-      'input[type="search"]:not([readonly]):not([disabled])',
-      'input[type="month"]:not([readonly]):not([disabled])',
-      'input[type="week"]:not([readonly]):not([disabled])',
-      'input:not([type]):not([readonly]):not([disabled]):not([type="submit"]):not([type="button"]):not([type="reset"]):not([type="file"]):not([type="image"]):not([type="hidden"])',
-      'textarea:not([readonly]):not([disabled])',
-      'select:not([disabled])',
-      '[contenteditable="true"]'
-    ];
+    // Buscar TODOS os campos de forma mais simples
+    const allInputs = document.querySelectorAll('input, textarea, select');
     
-    const fields = Array.from(document.querySelectorAll(selectors.join(', ')))
-      .filter(field => {
-        // Verificar se está visível
-        const style = window.getComputedStyle(field);
-        const isVisible = style.display !== 'none' && 
-                         style.visibility !== 'hidden' && 
-                         field.offsetWidth > 0 && 
-                         field.offsetHeight > 0 &&
-                         style.opacity !== '0';
-        
-        // Verificar se não é um campo de submit/button
-        const isFormField = !['submit', 'button', 'reset', 'file', 'image', 'hidden'].includes(field.type);
-        
-        return isVisible && isFormField;
+    console.log('Total de elementos encontrados:', allInputs.length);
+    
+    const validFields = Array.from(allInputs).filter(field => {
+      // Excluir tipos que não devemos preencher
+      const excludedTypes = ['submit', 'button', 'reset', 'file', 'image', 'hidden', 'checkbox', 'radio'];
+      
+      // Verificar se não é um tipo excluído
+      if (excludedTypes.includes(field.type)) {
+        return false;
+      }
+      
+      // Verificar se não está readonly ou disabled
+      if (field.readOnly || field.disabled) {
+        return false;
+      }
+      
+      // Verificar se está visível
+      const rect = field.getBoundingClientRect();
+      const style = window.getComputedStyle(field);
+      
+      const isVisible = rect.width > 0 && 
+                       rect.height > 0 && 
+                       style.display !== 'none' && 
+                       style.visibility !== 'hidden' &&
+                       style.opacity !== '0';
+      
+      return isVisible;
+    });
+    
+    console.log('Campos válidos encontrados:', validFields.length);
+    validFields.forEach((field, index) => {
+      console.log(`Campo ${index + 1}:`, {
+        tag: field.tagName,
+        type: field.type,
+        id: field.id,
+        name: field.name,
+        placeholder: field.placeholder
       });
+    });
     
-    console.log('Campos encontrados:', fields.length, fields);
-    return fields;
+    return validFields;
   }
   
   async fillField(field) {
     return new Promise((resolve) => {
       const fieldKey = this.getFieldKey(field);
       if (this.processedFields.has(fieldKey)) {
+        console.log('Campo já processado, pulando...');
         resolve();
         return;
       }
       
-      // Scroll para o campo
+      console.log('Iniciando preenchimento do campo:', field);
+      
+      // Scroll para o campo e focar
       field.scrollIntoView({ behavior: 'smooth', block: 'center' });
       
       // Destacar o campo
-      const originalStyle = field.style.cssText;
+      const originalBorder = field.style.border;
+      const originalBoxShadow = field.style.boxShadow;
+      
       field.style.border = '3px solid #4CAF50';
       field.style.boxShadow = '0 0 10px rgba(76, 175, 80, 0.5)';
-      field.style.transition = 'all 0.3s ease';
       
       setTimeout(() => {
         try {
-          // Focar no campo
           field.focus();
           
           const fieldType = this.detectFieldType(field);
-          console.log('Preenchendo campo:', {
-            type: fieldType,
-            tagName: field.tagName,
-            inputType: field.type,
-            id: field.id,
-            name: field.name
-          });
+          console.log('Tipo de campo detectado:', fieldType);
+          
+          let value;
           
           if (field.tagName === 'SELECT') {
             // Preencher select
-            const options = Array.from(field.options)
-              .filter(opt => opt.value && opt.value !== '' && opt.value !== 'default');
-            if (options.length > 0) {
+            const options = Array.from(field.options).filter(opt => 
+              opt.value && opt.value !== '' && !opt.disabled
+            );
+            
+            if (options.length > 1) { // Pular primeira opção se for placeholder
               const randomOption = options[Math.floor(Math.random() * options.length)];
               field.value = randomOption.value;
-              field.selectedIndex = randomOption.index;
+              value = randomOption.value;
             }
-          } else if (field.hasAttribute('contenteditable')) {
-            // Preencher contenteditable
-            const value = this.getValueForField(fieldType, field);
-            field.textContent = value;
           } else {
-            // Preencher input/textarea
-            const value = this.getValueForField(fieldType, field);
-            
-            // Limpar campo primeiro
-            field.value = '';
-            
-            // Simular digitação para campos mais sensíveis
-            if (field.type === 'password' || fieldType === 'email') {
-              this.simulateTyping(field, value);
-            } else {
-              field.value = value;
-            }
+            // Preencher input ou textarea
+            value = this.getValueForField(fieldType, field);
+            field.value = value;
           }
           
-          // Disparar todos os eventos possíveis
-          const events = ['input', 'change', 'blur', 'keyup', 'keydown', 'focus'];
-          events.forEach(eventType => {
-            const event = new Event(eventType, { bubbles: true, cancelable: true });
+          console.log('Valor inserido:', value);
+          
+          // Disparar eventos
+          const events = ['input', 'change', 'blur'];
+          events.forEach(eventName => {
+            const event = new Event(eventName, { bubbles: true });
             field.dispatchEvent(event);
           });
           
-          // Disparar evento customizado para React/Vue
-          const customEvent = new CustomEvent('input', {
-            bubbles: true,
-            detail: { value: field.value }
-          });
-          field.dispatchEvent(customEvent);
-          
+          // Marcar como processado
           this.processedFields.add(fieldKey);
           
+          // Restaurar estilos
           setTimeout(() => {
-            // Restaurar estilo original
-            field.style.cssText = originalStyle;
+            field.style.border = originalBorder;
+            field.style.boxShadow = originalBoxShadow;
             resolve();
           }, 300);
           
         } catch (error) {
           console.error('Erro ao preencher campo:', error);
-          field.style.cssText = originalStyle;
+          field.style.border = originalBorder;
+          field.style.boxShadow = originalBoxShadow;
           resolve();
         }
-      }, 200);
+      }, 500);
     });
-  }
-  
-  simulateTyping(field, value) {
-    let index = 0;
-    const typeChar = () => {
-      if (index < value.length) {
-        field.value += value[index];
-        field.dispatchEvent(new Event('input', { bubbles: true }));
-        index++;
-        setTimeout(typeChar, 50);
-      }
-    };
-    typeChar();
   }
   
   getFieldKey(field) {
-    return field.id || field.name || field.className || 
-           field.placeholder || field.outerHTML.substring(0, 100);
+    return field.id || field.name || field.className || field.type || Math.random().toString();
   }
   
   findNextButton() {
-    const buttonSelectors = [
-      'button[type="submit"]',
-      'input[type="submit"]',
-      'button',
-      'input[type="button"]',
-      '[role="button"]',
-      'a[href*="next"]',
-      '.btn',
-      '.button'
-    ];
+    const buttons = document.querySelectorAll('button, input[type="submit"], input[type="button"], a');
     
-    const allButtons = [];
-    buttonSelectors.forEach(selector => {
-      allButtons.push(...Array.from(document.querySelectorAll(selector)));
-    });
+    for (let button of buttons) {
+      const text = (button.textContent || button.value || '').toLowerCase();
+      const rect = button.getBoundingClientRect();
+      
+      // Verificar se está visível
+      if (rect.width === 0 || rect.height === 0) continue;
+      
+      // Procurar palavras-chave
+      const keywords = ['next', 'continue', 'submit', 'send', 'próximo', 'continuar', 'enviar'];
+      if (keywords.some(keyword => text.includes(keyword))) {
+        return button;
+      }
+    }
     
-    // Filtrar botões visíveis
-    const visibleButtons = allButtons.filter(btn => {
-      const style = window.getComputedStyle(btn);
-      return style.display !== 'none' && 
-             style.visibility !== 'hidden' && 
-             btn.offsetParent !== null;
-    });
-    
-    // Procurar por palavras-chave
-    const nextButton = visibleButtons.find(btn => {
-      const text = (btn.textContent || btn.value || btn.title || '').toLowerCase();
-      const keywords = [
-        'next', 'continue', 'submit', 'send', 'enviar', 'próximo', 
-        'continuar', 'seguinte', 'avançar', 'prosseguir', 'confirmar',
-        'finalizar', 'concluir', 'finish', 'complete'
-      ];
-      return keywords.some(keyword => text.includes(keyword));
-    });
-    
-    return nextButton || visibleButtons[visibleButtons.length - 1];
+    // Se não encontrar, retornar o último botão submit
+    const submitButtons = document.querySelectorAll('button[type="submit"], input[type="submit"]');
+    return submitButtons[submitButtons.length - 1];
   }
   
   async processForm() {
-    if (!this.isRunning || this.isPaused) return;
+    if (!this.isRunning || this.isPaused) {
+      console.log('Processo parado. Running:', this.isRunning, 'Paused:', this.isPaused);
+      return;
+    }
+    
+    console.log('=== INICIANDO PROCESSAMENTO DO FORMULÁRIO ===');
     
     const fields = this.getFormFields();
-    console.log('Processando formulário. Campos encontrados:', fields.length);
+    
+    if (fields.length === 0) {
+      console.log('Nenhum campo encontrado na página');
+      this.stop();
+      return;
+    }
     
     const unprocessedFields = fields.filter(field => {
       const fieldKey = this.getFieldKey(field);
       return !this.processedFields.has(fieldKey);
     });
     
-    console.log('Campos não processados:', unprocessedFields.length);
+    console.log(`Campos não processados: ${unprocessedFields.length} de ${fields.length}`);
     
     if (unprocessedFields.length === 0) {
-      console.log('Todos os campos preenchidos. Procurando botão próximo...');
+      console.log('Todos os campos foram preenchidos. Procurando botão próximo...');
+      
       const nextButton = this.findNextButton();
       if (nextButton) {
-        console.log('Botão encontrado:', nextButton);
+        console.log('Botão próximo encontrado:', nextButton);
+        
         setTimeout(() => {
           nextButton.click();
+          console.log('Botão clicado. Aguardando nova página...');
+          
+          // Resetar para próxima página
           this.processedFields.clear();
           this.currentFieldIndex = 0;
           
+          // Aguardar carregamento da página
           setTimeout(() => {
             if (this.isRunning && !this.isPaused) {
+              console.log('Continuando na nova página...');
               this.processForm();
             }
-          }, 2000);
+          }, 3000);
         }, 1000);
       } else {
-        console.log('Nenhum botão próximo encontrado. Parando...');
+        console.log('Nenhum botão próximo encontrado. Finalizando...');
         this.stop();
       }
       return;
     }
     
+    // Processar próximo campo
     if (this.currentFieldIndex < unprocessedFields.length) {
       const currentField = unprocessedFields[this.currentFieldIndex];
-      console.log('Preenchendo campo:', this.currentFieldIndex + 1, 'de', unprocessedFields.length);
+      console.log(`Processando campo ${this.currentFieldIndex + 1}/${unprocessedFields.length}`);
       
       await this.fillField(currentField);
       this.currentFieldIndex++;
       
+      // Continuar com próximo campo
       this.timeoutId = setTimeout(() => {
         this.processForm();
       }, this.speed);
@@ -667,23 +411,25 @@ class AutoFormFiller {
   }
   
   start() {
+    console.log('=== INICIANDO FORM FILLER ===');
     this.isRunning = true;
     this.isPaused = false;
+    this.currentFieldIndex = 0;
     chrome.storage.local.set({formFillerStatus: 'active'});
-    console.log('Form filler iniciado');
     this.processForm();
   }
   
   pause() {
+    console.log('Form filler pausado');
     this.isPaused = true;
     if (this.timeoutId) {
       clearTimeout(this.timeoutId);
     }
     chrome.storage.local.set({formFillerStatus: 'paused'});
-    console.log('Form filler pausado');
   }
   
   stop() {
+    console.log('Form filler parado');
     this.isRunning = false;
     this.isPaused = false;
     this.currentFieldIndex = 0;
@@ -694,13 +440,12 @@ class AutoFormFiller {
     }
     
     chrome.storage.local.set({formFillerStatus: 'stopped'});
-    console.log('Form filler parado');
   }
   
   updateSpeed(newSpeed) {
     this.speed = newSpeed;
     chrome.storage.local.set({formFillerSpeed: newSpeed});
-    console.log('Velocidade atualizada:', newSpeed);
+    console.log('Velocidade atualizada para:', newSpeed, 'ms');
   }
 }
 
@@ -709,6 +454,8 @@ const formFiller = new AutoFormFiller();
 
 // Listener para mensagens da popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log('Mensagem recebida:', request);
+  
   switch (request.action) {
     case 'start':
       formFiller.updateSpeed(request.speed);
@@ -724,4 +471,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       formFiller.updateSpeed(request.speed);
       break;
   }
+  
   sendResponse({status: 'success'});
+  return true;
+});
+
+console.log('Auto Form Filler carregado e pronto!');
