@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Auto Form Filler - Animation Characters",
+  "version": "1.0",
+  "description": "Preenche formulários automaticamente com personagens de animação",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Auto Form Filler"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
